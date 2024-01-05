@@ -1,0 +1,8 @@
+.btn-group{
+    margin-right: 10px;
+}
+.btn-group>button{
+    background: transparent;
+    color: white;
+    font-weight: 400;
+}

@@ -1,0 +1,119 @@
+<ngx-spinner
+bdOpacity = 0.9
+      bdColor = "#333"
+      size = "medium"
+      color = "#fff"
+      type = "ball-scale-multiple"></ngx-spinner>
+
+<!-- <ul class="breadcrumb">
+  <li><a href="javascript:void(0)">Home</a></li>
+  <li><a href="javascript:void(0)">T&D</a></li>
+  <li><a href="javascript:void(0)">Assign Training</a></li>
+</ul> -->
+<div class="row mr-0" style="background:#f4dad8;">
+    <div class="col-md-4">
+      <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+        <span class="fa fa-refresh"></span> {{submenuName}}
+      </a>
+    </div>
+    <div class="col-md-4 text-center">
+      <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+        style="width: 70px;height: 45px;"/>
+        &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 form-group">
+      <!-- <label>Circle Name</label> -->
+      <label>Organization</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="circleNameList" 
+        [(ngModel)]="selectedCircleNameList" [settings]="singleSelectropdownSettings" 
+        (onSelect)="onSelectCircle($event)" (onDeSelect)="onDeSelectCircle($event)"
+        >
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>Training Name</label>
+      <select class="form-control" [(ngModel)]="trainingName" (change)="selectTrainingName('SUB')">
+        <option value="">Select</option>
+        <option *ngFor="let ct of trainingNameList" value="{{ct.paramCode}}">{{ct.paramDesc}}</option>
+      </select>
+    </div>
+    <div class="col-md-2 form-group" *ngIf="!isGroup">
+      <label>Sub Training Name</label>
+      <select class="form-control" [(ngModel)]="subTrainingName" (change)="selectTrainingName('ROLE')">
+        <option value="">Select</option>
+        <option *ngFor="let stn of subTrainingNameList" value="{{stn.paramCode}}">{{stn.paramDesc}}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>User Role</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="roleList" [(ngModel)]="selectedRoleList"
+        [settings]="multiSelectropdownSettings"  [disabled]="isOR">
+      </ng-multiselect-dropdown>
+      <!-- (onSelect)="onSelectRole($event)"
+        (onSelectAll)="onSelectAllRole($event)" (onDeSelect)="onDeSelectRole($event)"
+        (onDeSelectAll)="onDeSelectAllRole($event)" -->
+    </div>
+
+    <div class="col-md-2 form-group">
+      <!-- <label>Zone Name</label> -->
+      <label>Location</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="zoneNameList" [(ngModel)]="selectedZoneNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectZone($event)"
+        (onSelectAll)="onSelectAllZone($event)" (onDeSelect)="onDeSelectZone($event)"
+        (onDeSelectAll)="onDeSelectAllZone($event)" [disabled]="isOR">
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <!-- <label>Cluster Name</label> -->
+      <label>Department</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="clusterNameList" [(ngModel)]="selectedClusterNameList"
+        [settings]="multiSelectropdownSettings" [disabled]="isOR">
+      </ng-multiselect-dropdown>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2 form-group">
+      <label>Start Date</label>
+      <input type="date" class="form-control" [(ngModel)]="startDate">
+    </div>
+    <div class="col-md-2 form-group">
+      <label>End Date</label>
+      <input type="date" class="form-control" [(ngModel)]="endDate">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <label><input type="checkbox" [(ngModel)]="isOR" /> OR </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label>Employee Id</label>
+      <textarea class="form-control" [(ngModel)]="employeeId" [disabled]="!isOR"  rows="5" placeholder="comma seperated employee id"
+        style="resize: none"></textarea>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-12 text-right">
+      <button class="btn btn-primary hsil-red" (click)="assignTraining()">Create Ticket</button>
+    </div>
+  </div>
+
+  <!-- <div class="row" style="margin-top: 10px">
+    <div class="col-md-12 text-right">
+      <button class="btn btn-primary hsil-red" (click)="exportSubmittedFeedbackData()">Export Feedback</button>
+    </div>
+  </div> -->
+</div>

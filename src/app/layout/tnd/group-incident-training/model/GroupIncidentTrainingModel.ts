@@ -1,0 +1,52 @@
+export class GroupIncidentTrainingModel{
+    public imgloader : boolean = false;
+    public noDataViewer : boolean = false;
+    public trainingNameDisplayViewer : boolean = false;
+    public subTrainingNameDisplayViewer  : boolean = false;
+    public inciResultDivViewer : boolean = false;
+    public inciResultWaitingDivViewer : boolean = false;
+    public trainingNameResponse = [];
+    public subTrainingNameDisplayArr = [];
+    public preAnswerJsonArr = [];
+    public postAnswerJsonArr = [];
+    public tId : any;
+    public groupName : any = "";
+    public trainingType : any = "";
+    public trainingNameDisplay = "";
+    public subTrainingNameDisplay = "";
+    public videoQuestionDisplayArr = [];
+    public preQuestionStep = 0;
+    public videoQuestionStep = 0;
+    public postQuestionStep = 0;
+    public maxStep = 0;
+    public inciPreQuestionDisplayViewer : boolean = true;
+    public startPreQuestionTime : any;
+    public inciVideoQuestionDisplayViewer : boolean = false;
+    public startPostQuestionTime : any;
+    public startVideoQuestionTime : any;
+    public inciPostQuestionDisplayViewer : boolean = false;
+    public preQuestionResponse = [];
+    public postQuestionResponse = [];
+    public feedbackQuestionResponse = [];
+    public prePassingPercentage :any;
+    public postPassingPercentage : any;
+    public isVideo : any;
+    public isPost : any = "NO";
+    public isPre : any = "NO";
+    public isFeedback : any = "NO";
+    public startTrainingObj : any;
+    public groupTrainingDisplayDiv : boolean = false;
+    
+    public stopPreQuestionTime : any;
+    
+    public feedbackAnswerArr = [];
+    public stopVideoQuestionTime : any;
+    public submitPostQuestionTime : any;
+    public stopPostQuestionTime : any;
+    public postQuestionJson = [];
+    public postResult : any;
+    public postPercentage : any;
+    public postNoOfQuestions : any;
+    public postCorrectQuestions : any;
+    public submitFeedbackQuestionTime = "";
+}

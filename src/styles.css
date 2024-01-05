@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+#pageNav{
+    /* color: #731673; */
+    color: #db1d12;
+}
+.mg-0{
+    margin: 0px !important;
+}
+.pd-0{
+    padding: 0px !important;
+}
+#scroll-bar::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#scroll-bar::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+
+
+
+

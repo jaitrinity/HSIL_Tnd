@@ -1,0 +1,514 @@
+<ngx-spinner
+bdOpacity = 0.9
+      bdColor = "#333"
+      size = "medium"
+      color = "#fff"
+      type = "ball-scale-multiple"></ngx-spinner>
+
+  <div class="row mr-0" style="background:#f4dad8;">
+    <div class="col-md-4">
+      <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+        <span class="fa fa-refresh"></span> {{submenuName}}
+      </a>
+    </div>
+    <div class="col-md-4 text-center">
+      <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+        style="width: 70px;height: 45px;"/>
+        &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <div class="container-fluid">
+    <div *ngIf="gitModel.imgloader" style="text-align: center">
+      <img src="assets/img/loader.gif" />
+    </div>
+
+    <div *ngIf="gitModel.noDataViewer" style="text-align: center">
+      <div class="row" id="hmbg">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <h2 class="text-center task-fore">No Training Found</h2>
+          <button class="btn btn-success hsil-red" (click)="finishTraining()">Recheck</button>
+        </div>
+        <div class="col-sm-4"></div>
+      </div>
+    </div>
+
+    <div *ngIf="gitModel.trainingNameDisplayViewer">
+      <div class="row">
+        <div class="col-md-12 text-center mr-t-b-10">
+          <h2 class="task-fore">Select Category for Training Courses</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="text-center yesno-que-text"></div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+  
+      <div class="row" style="height: 435px;overflow: auto">
+        <div class="col-md-6 mr-t-b-10" *ngFor="let incTra of gitModel.trainingNameResponse">
+          <div class="row mr-0 taskbgpro" (click)="startGroupIncidentTraining(incTra)">
+            <div class="col-md-12">
+              <div class="row mr-0">
+                <div class="col-md-12" style="padding:10px 0px">
+                  <h4 class="task-fore">{{incTra.groupName}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="gitModel.groupTrainingDisplayDiv">
+      <div class="groupTrainingSlides" style="margin:20px 0px" *ngFor="let gt of groupTrainingQuestionArr;let gtIndex = index">
+        <div class="row">
+          <div class="col-md-4">
+            <h4>{{gitModel.groupName}}</h4>
+          </div>
+          
+          <div class="col-md-2 text-center">
+              <h4 *ngIf="gt.optionType != 11111">Question</h4>
+              <h4 *ngIf="gt.optionType == 11111" class="task-fore">
+                Training <span class="mediaName" *ngIf="gt.mediaType == '1'">Video </span> 
+                <span class="mediaName" *ngIf="gt.mediaType == '2'">PPT </span>
+                <span class="mediaName" *ngIf="gt.mediaType == '3'">HTML </span> 
+                <span class="mediaName" *ngIf="gt.mediaType == '4'">PDF </span>
+                <span class="mediaName" *ngIf="gt.mediaType == '5'">DOCX </span> 
+                <span class="mediaName" *ngIf="gt.mediaType == '6'">GIF </span>
+                <span class="mediaName" *ngIf="gt.mediaType == '7'">SCORM </span>
+              </h4>
+          </div>
+          
+          <div class="col-md-2 text-center">
+            <h4 class="task-fore">Stage : {{gt.questionStep}} / {{groupTrainingQuestionSize}}</h4>
+          </div>
+          
+          <div class="col-md-4 text-right">
+            <!-- <button class="btn btn-danger hsil-red" (click)="restartIncidentTraining('restart')">Restart</button> -->
+            <button class="btn btn-danger hsil-red" (click)="gitModel.groupTrainingDisplayDiv=false;gitModel.trainingNameDisplayViewer=true">Restart</button>
+          </div>
+        </div>
+
+        
+
+        <div *ngIf="gt.optionType == 11111">
+          <div class="row question-div">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+
+              <button *ngIf="gt.mediaType == '1'" (click)="playTrainingVideo(gt.trVideo,gt.videoId)" class="btn hsil-red text-white btn-block" style="margin-top: 60px">
+                <span style="font-weight: bold"> {{mediaButtonText}} </span>
+              </button> 
+            
+              <a *ngIf="gt.mediaType != '1'" (click)="showMedia(gt.videoId)" [href]="gt.trVideo" target="_blank" class="btn hsil-red text-white btn-block" style="margin-top: 60px">
+                <span style="font-weight: bold"> {{mediaButtonText}} </span>
+              </a>
+            </div>  
+            <div class="col-md-4"></div>
+          </div>
+          <div class="row option-div"></div>
+        </div>
+
+        <div class="row question-div" *ngIf="gt.optionType != 11111">
+          <div class="col-md-12">
+            <!-- <h3>{{gt.questionStep}}. {{gt.question}}</h3> -->
+            <h3>{{gt.question}}</h3>
+          </div>
+        </div>
+        
+        
+        <div class="row option-div" *ngIf="gt.optionType != 11111">
+
+          <div class="col-md-12 pd-0" *ngIf="gt.optionType == 1">
+            <div class="row op-gap">
+              <div class="col-md-12">
+                <textarea class="form-control" id="op-pre-{{gt.prqId}}" rows="4" style="width:100%;resize:none;" placeholder="your answer !! "></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- for radio type -->
+          <div class="col-md-12 pd-0" *ngIf="gt.optionType == 3">
+            
+            <div class="row op-gap">
+              <div *ngIf="gt.optionSize == '1' || gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10'"
+              class="col-md-6">
+                1. <label class="option-label"><input type="radio" value="OP1" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionOne}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10'"
+              class="col-md-6">
+                2. <label class="option-label"><input type="radio" value="OP2" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionTwo}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap" style="margin:5px 0px">
+              <div *ngIf="gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                3. <label class="option-label"><input type="radio" value="OP3" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionThree}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                4. <label class="option-label"><input type="radio" value="OP4" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionFour}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap" style="margin:5px 0px">
+              <div *ngIf="gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10'"
+              class="col-md-6">
+                5. <label class="option-label"><input type="radio" value="OP5" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionFive}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                6. <label class="option-label"><input type="radio" value="OP6" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionSix}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap" style="margin:5px 0px">
+              <div *ngIf="gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10'"
+              class="col-md-6">
+                7. <label class="option-label"><input type="radio" value="OP7" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionSeven}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                8. <label class="option-label"><input type="radio" value="OP8" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionEight}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap" style="margin:5px 0px">
+              <div *ngIf="gt.optionSize == '9' || gt.optionSize == '10'"
+              class="col-md-6">
+                9. <label class="option-label"><input type="radio" value="OP9" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionNine}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '10'"
+              class="col-md-6">
+                10. <label class="option-label"><input type="radio" value="OP10" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionTen}}</label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- for checkbox type -->
+          <div class="col-md-12 pd-0" *ngIf="gt.optionType == 4">
+            
+            
+            <div class="row op-gap">
+              <div *ngIf="gt.optionSize == '1' || gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                1. <label class="option-label"><input type="checkbox" value="OP1" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionOne}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                2. <label class="option-label"><input type="checkbox" value="OP2" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionTwo}}</label>
+              </div>
+            </div>
+            <div class="row op-gap">	
+              <div *ngIf="gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                3. <label class="option-label"><input type="checkbox" value="OP3" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionThree}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '4' || gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                4. <label class="option-label"><input type="checkbox" value="OP4" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionFour}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap">	
+              <div *ngIf="gt.optionSize == '5' || 
+              gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                5. <label class="option-label"><input type="checkbox" value="OP5" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionFive}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                6. <label class="option-label"><input type="checkbox" value="OP6" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionSix}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap">	
+              <div *ngIf="gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                7. <label class="option-label"><input type="checkbox" value="OP7" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionSeven}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                8. <label class="option-label"><input type="checkbox" value="OP8" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionEight}}</label>
+              </div>
+            </div>
+            
+            <div class="row op-gap">	
+              <div *ngIf="gt.optionSize == '9' || gt.optionSize == '10' "
+              class="col-md-6">
+                9. <label class="option-label"><input type="checkbox" value="OP9" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionNine}}</label>
+              </div>
+              <div *ngIf="gt.optionSize == '10'"
+              class="col-md-6">
+                10. <label class="option-label"><input type="checkbox" value="OP10" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> {{gt.optionTen}}</label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- for dropdown type -->
+          <div class="col-md-12 pd-0" *ngIf="gt.optionType == 5">
+            <div class="row">
+              <div class="col-md-12" >
+                <select class="form-control input-lg select-op" id="op-pre-{{gt.prqId}}">
+                  <option value="">Select</option>
+                  <option *ngIf="gt.optionSize == '1' || gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+                  gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP1">{{gt.optionOne}}</option>
+                  <option *ngIf="gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+                  gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP2">{{gt.optionTwo}}</option>
+                  <option *ngIf="gt.optionSize == '3' || gt.optionSize == '4' || gt.optionSize == '5' || 
+                  gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP3">{{gt.optionThree}}</option>
+                  <option *ngIf="gt.optionSize == '4' || gt.optionSize == '5' || 
+                  gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP4">{{gt.optionFour}}</option>
+                  <option *ngIf="gt.optionSize == '5' || 
+                  gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP5">{{gt.optionFive}}</option>
+                  <option *ngIf="gt.optionSize == '6' || gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP6">{{gt.optionSix}}</option>
+                  <option *ngIf="gt.optionSize == '7' || gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP7">{{gt.optionSeven}}</option>
+                  <option *ngIf="gt.optionSize == '8' || gt.optionSize == '9' || gt.optionSize == '10' " value="OP8">{{gt.optionEight}}</option>
+                  <option *ngIf="gt.optionSize == '9' || gt.optionSize == '10' " value="OP9">{{gt.optionNine}}</option>
+                  <option *ngIf="gt.optionSize == '10' " value="OP10">{{gt.optionTen}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- for image type -->
+          <div  class="col-md-12 pd-0" *ngIf="gt.optionType == 6">
+            <div class="row op-gap">
+              <div *ngIf="gt.optionSize == '1' || gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4'"
+              class="col-md-6">
+                1. <label class="option-label"><input type="radio" value="OP1" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> <img src="{{gt.optionOne}}" class="option-img"></label>
+              </div>
+              <div *ngIf="gt.optionSize == '2' || gt.optionSize == '3' || gt.optionSize == '4'"
+              class="col-md-6">
+                2. <label class="option-label"><input type="radio" value="OP2" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> <img src="{{gt.optionTwo}}" class="option-img"></label>
+              </div>
+            </div>
+            
+            <div class="row op-gap">	
+              <div *ngIf="gt.optionSize == '3' || gt.optionSize == '4'" class="col-md-6">
+                3. <label class="option-label"><input type="radio" value="OP3" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> <img src="{{gt.optionThree}}" class="option-img"></label>
+              </div>
+              <div  *ngIf="gt.optionSize == '4'"
+              class="col-md-6">
+                4. <label class="option-label"><input type="radio" value="OP4" class="op-pre-{{gt.prqId}}" name="op-pre-{{gt.prqId}}"/> <img src="{{gt.optionFour}}" class="option-img"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <button *ngIf="gtIndex != 0" class="btn hsil-red text-white" (click)="plusGroupTraining(-1)">&#10094; Previous</button>
+          </div>
+          
+          <div class="col-md-4 text-right">
+            <button *ngIf="gtIndex + 1 != groupTrainingQuestionSize" class="btn hsil-red text-white" (click)="plusGroupTraining(1)">Next &#10095;</button>
+            <button *ngIf="gtIndex + 1 == groupTrainingQuestionSize" class="btn hsil-red text-white" (click)="submitPreQuestion()">
+              Final Submit
+            </button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div *ngIf="gitModel.inciResultWaitingDivViewer">
+    <div style="text-align: center;margin:10px 0px">
+      <img src="assets/img/loader.gif" />
+    </div>
+    <div class="row text-center" style="margin:10px 0px">
+      <h3 class="task-fore">Please Wait  loading result....</h3>
+    </div>
+  </div>
+
+  <div *ngIf="gitModel.inciResultDivViewer">
+      <div class="row text-center" style="margin:10px 0px">
+        <h3 class="task-fore">Final Result</h3>
+      </div>
+    
+    <!-- <div class="row" style="margin:10px 0px" *ngIf="isPre == 'YES' || isPost == 'YES' ">
+      <table class="table table-bordered">
+        <tr> <th>Question</th> <th>No of Question</th> <th>Correct Question</th> <th>Percentage</th> <th>Result</th> </tr>
+        <tr *ngIf="isPre == 'YES' "> <th>Pre</th> <td>{{preNoOfQuestions}}</td> <td>{{preCorrectQuestions}}</td> <td>{{prePercentage  | number:0}} %</td> <td>{{preResult}}</td> </tr>
+        <tr *ngIf="isPost == 'YES' "> <th>Post</th> <td>{{postNoOfQuestions}}</td> <td>{{postCorrectQuestions}}</td> <td>{{postPercentage | number:0}} %</td> <td>{{postResult}}</td> </tr>
+        <tr *ngIf="isPre == 'YES' "> <th colspan="4">Pre Answer</th> 
+          <th> 
+            <button type="button" class="btn hsil-red text-white" data-toggle="modal" data-target="#preResultModal">Pre Answer</button> 
+          </th>
+        <tr *ngIf="isPost == 'YES' "> <th colspan="4">Post Answer</th> 
+          <th>
+            <button type="button" class="btn hsil-red text-white" data-toggle="modal" data-target="#postResultModal">Post Answer</button> 
+          </th>
+        </tr>
+      </table>
+    </div> -->
+    
+    <div class="row" style="margin:20px 0px">
+      <div class="col-xs-12 text-right">
+        <button class="btn hsil-red text-white" (click)="finishTraining()">Finish</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="videoPlayModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Video</h3>
+        </div>
+        <div class="modal-body" style="height:430px">
+          <!-- (seeking)="videoSeeking()" -->
+          <video controls autoplay id="myvideo"  [src] ="playedVideoURL" style="width:100%;height: 100%;" controlsList="nodownload">
+              Your browser does not support HTML5 video.
+          </video>
+        </div>
+        <div class="modal-footer">
+          <button (click)="closeVideoPlayModal()" type="button" class="btn hsil-red text-white">Finish</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal fade" id="feedbackModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+          <h4 class="modal-title text-center">Feedback</h4>
+        </div>
+        <div class="modal-body" style="height: 440px;overflow: auto;">
+          <div *ngFor="let fd of feedbackQuestionResponse;let fdQuesIndex = index">
+              <div class="row fd-question-div">
+                  <div class="col-md-12">
+                    <h3 style="font-size: 14px">{{fdQuesIndex + 1}}. {{fd.question}}</h3>
+                    <!-- <h3 style="font-size: 14px">{{fd.prqId}}. {{fd.question}}</h3> -->
+                  </div>
+              </div>  
+              <div class="row fd-option-div">
+                <div class="col-md-12 pd-0" *ngIf="fd.optionType == 1">
+                  <div class="row fd-op-gap">
+                    <div class="col-md-12">
+                      <textarea class="form-control" id="op-fd-{{fd.prqId}}" rows="2" style="width:100%;resize:none;" placeholder="your answer !! "></textarea>
+                    </div>
+                  </div>
+                </div>
+                <!-- for radio type -->
+                <div class="col-md-12 pd-0" *ngIf="fd.optionType == 3">
+                  
+                    <div class="row fd-op-gap">
+                      <div *ngIf="fd.optionSize == '1' || fd.optionSize == '2' || fd.optionSize == '3' || fd.optionSize == '4' || fd.optionSize == '5' || 
+                      fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10'"
+                      class="col-md-6">
+                        1. <label class="option-label"><input type="radio" value="OP1" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionOne}}</label>
+                      </div>
+                      <div *ngIf="fd.optionSize == '2' || fd.optionSize == '3' || fd.optionSize == '4' || fd.optionSize == '5' || 
+                      fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10'"
+                      class="col-md-6">
+                        2. <label class="option-label"><input type="radio" value="OP2" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionTwo}}</label>
+                      </div>
+                    </div>
+                    
+                    <div class="row fd-op-gap">
+                      <div *ngIf="fd.optionSize == '3' || fd.optionSize == '4' || fd.optionSize == '5' || 
+                      fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10' "
+                      class="col-md-6">
+                        3. <label class="option-label"><input type="radio" value="OP3" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionThree}}</label>
+                      </div>
+                      <div *ngIf="fd.optionSize == '4' || fd.optionSize == '5' || 
+                      fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10' "
+                      class="col-md-6">
+                        4. <label class="option-label"><input type="radio" value="OP4" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionFour}}</label>
+                      </div>
+                    </div>
+                    
+                    <div class="row fd-op-gap">
+                      <div *ngIf="fd.optionSize == '5' || 
+                      fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10'"
+                      class="col-md-6">
+                        5. <label class="option-label"><input type="radio" value="OP5" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionFive}}</label>
+                      </div>
+                      <div *ngIf="fd.optionSize == '6' || fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10' "
+                      class="col-md-6">
+                        6. <label class="option-label"><input type="radio" value="OP6" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionSix}}</label>
+                      </div>
+                    </div>
+                    
+                    <div class="row fd-op-gap">
+                      <div *ngIf="fd.optionSize == '7' || fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10'"
+                      class="col-md-6">
+                        7. <label class="option-label"><input type="radio" value="OP7" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionSeven}}</label>
+                      </div>
+                      <div *ngIf="fd.optionSize == '8' || fd.optionSize == '9' || fd.optionSize == '10' "
+                      class="col-md-6">
+                        8. <label class="option-label"><input type="radio" value="OP8" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionEight}}</label>
+                      </div>
+                    </div>
+                    
+                    <div class="row fd-op-gap">
+                      <div *ngIf="fd.optionSize == '9' || fd.optionSize == '10'"
+                      class="col-md-6">
+                        9. <label class="option-label"><input type="radio" value="OP9" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionNine}}</label>
+                      </div>
+                      <div *ngIf="fd.optionSize == '10'"
+                      class="col-md-6">
+                        10. <label class="option-label"><input type="radio" value="OP10" class="op-fd-{{fd.prqId}}" name="op-fd-{{fd.prqId}}"/> {{fd.optionTen}}</label>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            <!-- {{fd.prqId}} - {{fd.tId}} - {{fd.question}} - {{fd.optionType}} - {{fd.optionSize}} -->
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Later</button> -->
+          <button class="btn hsil-red text-white"  (click)="submitFeedback()" >Submit</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal fade" id="traininReassignModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+          <h4 class="modal-title text-center"></h4>
+        </div>
+        <div class="modal-body">
+          <p>Your percentage in this training is less than passing percentage <br>
+          Do you want to restart the training now??
+          
+          </p>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn hsil-red text-white" data-dismiss="modal">Later</button>
+          <button class="btn hsil-red text-white"  ng-click="restartIncidentTraining('yes')" >Reinitiate</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+</div>

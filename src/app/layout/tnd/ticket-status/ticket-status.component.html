@@ -1,0 +1,129 @@
+<ngx-spinner
+bdOpacity = 0.9
+      bdColor = "#333"
+      size = "medium"
+      color = "#fff"
+      type = "ball-scale-multiple"></ngx-spinner>
+
+<!-- <ul class="breadcrumb">
+  <li><a href="javascript:void(0)">Home</a></li>
+  <li><a href="javascript:void(0)">T&D</a></li>
+  <li><a href="javascript:void(0)">Ticket Status</a></li>
+</ul> -->
+
+<div class="row mr-0" style="background:#f4dad8;">
+  <div class="col-md-4">
+    <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+      <span class="fa fa-refresh"></span> {{submenuName}}
+    </a>
+  </div>
+  <div class="col-md-4 text-center">
+    <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+      style="width: 70px;height: 45px;"/>
+      &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<div class="container-fluid">
+  <div class="row" *ngIf="otherRole == 'Admin' ">
+    <div class="col-md-2 form-group">
+      <label>Start Date</label>
+      <input type="date" class="form-control" [(ngModel)]="startDate">
+    </div>
+    <div class="col-md-2 form-group">
+      <label>End Date</label>
+      <input type="date" class="form-control" [(ngModel)]="endDate">
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Organization</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="circleNameList" [(ngModel)]="selectedCircleNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectCircle($event)"
+        (onSelectAll)="onSelectAllCircle($event)" (onDeSelect)="onDeSelectCircle($event)"
+        (onDeSelectAll)="onDeSelectAllCircle($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Location</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="zoneNameList" [(ngModel)]="selectedZoneNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectZone($event)"
+        (onSelectAll)="onSelectAllZone($event)" (onDeSelect)="onDeSelectZone($event)"
+        (onDeSelectAll)="onDeSelectAllZone($event)">
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>Department</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="clusterNameList" [(ngModel)]="selectedClusterNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectCluster($event)"
+        (onSelectAll)="onSelectAllCluster($event)" (onDeSelect)="onDeSelectCluster($event)"
+        (onDeSelectAll)="onDeSelectAllCluster($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Employee Id</label>
+      <input type="text" class="form-control" [(ngModel)]="employeeId">
+    </div>
+  </div>
+
+  <div class="row" *ngIf="otherRole == 'Admin' ">
+    <div class="col-md-2 form-group">
+      <label>Training Name</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="trainingNameList" [(ngModel)]="selectedTrainingNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectTrainingName($event)"
+        (onSelectAll)="onSelectAllTrainingName($event)" (onDeSelect)="onDeSelectTrainingName($event)"
+        (onDeSelectAll)="onDeSelectAllTrainingName($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Sub Training Name</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="subTrainingNameList" [(ngModel)]="selectedSubTrainingNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectSubTrainingName($event)"
+        (onSelectAll)="onSelectAllSubTrainingName($event)" (onDeSelect)="onDeSelectSubTrainingName($event)"
+        (onDeSelectAll)="onDeSelectAllSubTrainingName($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>User Role</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="roleList" [(ngModel)]="selectedRoleList"
+        [settings]="multiSelectropdownSettings" >
+      </ng-multiselect-dropdown>
+      <!-- (onSelect)="onSelectRole($event)"
+        (onSelectAll)="onSelectAllRole($event)" (onDeSelect)="onDeSelectRole($event)"
+        (onDeSelectAll)="onDeSelectAllRole($event)" -->
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Ticket Status</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="ticketStatusList" [(ngModel)]="selectedTicketStatusList"
+        [settings]="multiSelectropdownSettings" >
+      </ng-multiselect-dropdown>
+      <!-- (onSelect)="onSelectTicketStatus($event)"
+        (onSelectAll)="onSelectAllTicketStatus($event)" (onDeSelect)="onDeSelectTicketStatus($event)"
+        (onDeSelectAll)="onDeSelectAllTicketStatus($event)" -->
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>Ticket Number</label>
+      <input type="text" class="form-control" [(ngModel)]="ticketNumber">
+    </div>
+    <div class="col-md-2 form-group" style="padding-top: 27px;">
+      <button class="btn btn-primary hsil-red" (click)="applyFilter()">Apply Filter</button> &nbsp;&nbsp;
+      <button class="btn btn-primary hsil-red" (click)="exportData()">Export</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:10px" *ngIf="otherRole == 'Other' ">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+      <button class="btn btn-primary hsil-red" (click)="applyFilter()">Apply Filter</button> &nbsp;&nbsp;
+      <button class="btn btn-primary hsil-red" (click)="exportData()">Export</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-12" style="overflow: auto">
+      <ng2-smart-table [settings]="settings" [source]="applyFilterData"></ng2-smart-table>
+      <!-- <ng2-smart-table [settings]="settings" [source]="applyFilterData" (delete)="view($event)"></ng2-smart-table> -->
+    </div>
+  </div>
+</div>

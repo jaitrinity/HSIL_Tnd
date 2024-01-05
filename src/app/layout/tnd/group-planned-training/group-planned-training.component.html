@@ -1,0 +1,20 @@
+<ngx-spinner
+bdOpacity = 0.9
+      bdColor = "#333"
+      size = "medium"
+      color = "#fff"
+      type = "ball-scale-multiple"></ngx-spinner>
+
+  <div class="row mr-0" style="background:#f4dad8;">
+    <div class="col-md-4">
+      <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+        <span class="fa fa-refresh"></span> {{submenuName}}
+      </a>
+    </div>
+    <div class="col-md-4 text-center">
+      <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+        style="width: 70px;height: 45px;"/>
+        &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+    </div>
+    <div class="col-md-4"></div>
+  </div>

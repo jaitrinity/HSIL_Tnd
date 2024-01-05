@@ -1,0 +1,152 @@
+<ngx-spinner
+bdOpacity = 0.9
+      bdColor = "#333"
+      size = "medium"
+      color = "#fff"
+      type = "ball-scale-multiple"></ngx-spinner>
+
+<!-- <ul class="breadcrumb">
+  <li><a href="javascript:void(0)">Home</a></li>
+  <li><a href="javascript:void(0)">T&D</a></li>
+  <li><a href="javascript:void(0)">Training History</a></li>
+</ul> -->
+
+<div class="row mr-0" style="background:#f4dad8;">
+  <div class="col-md-4">
+    <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+      <span class="fa fa-refresh"></span> {{submenuName}}
+    </a>
+  </div>
+  <div class="col-md-4 text-center">
+    <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+      style="width: 70px;height: 45px;"/>
+      &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<div class="container-fluid" >
+  <div class="row" *ngIf="otherRole == 'Admin' ">
+    <div class="col-md-2 form-group">
+      <label>Employee Name</label>
+      <input type="text" class="form-control input-sm" [(ngModel)]="employeeName">
+    </div>
+    <div class="col-md-2 form-group">
+      <label>User Role</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="roleList" [(ngModel)]="selectedRoleList"
+        [settings]="multiSelectropdownSettings" >
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <!-- <label>Circle Name</label> -->
+      <label>Organization</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="circleNameList" [(ngModel)]="selectedCircleNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectCircle($event)"
+        (onSelectAll)="onSelectAllCircle($event)" (onDeSelect)="onDeSelectCircle($event)"
+        (onDeSelectAll)="onDeSelectAllCircle($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group">
+      <!-- <label>Zone Name</label> -->
+      <label>Location</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="zoneNameList" [(ngModel)]="selectedZoneNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectZone($event)"
+        (onSelectAll)="onSelectAllZone($event)" (onDeSelect)="onDeSelectZone($event)"
+        (onDeSelectAll)="onDeSelectAllZone($event)">
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <!-- <label>Cluster Name</label> -->
+      <label>Department</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="clusterNameList" [(ngModel)]="selectedClusterNameList"
+        [settings]="multiSelectropdownSettings" (onSelect)="onSelectCluster($event)"
+        (onSelectAll)="onSelectAllCluster($event)" (onDeSelect)="onDeSelectCluster($event)"
+        (onDeSelectAll)="onDeSelectAllCluster($event)">
+      </ng-multiselect-dropdown>
+    </div>
+    <div class="col-md-2 form-group" style="padding-top: 27px;">
+      <button class="btn btn-primary hsil-red" (click)="applyFilter()">Apply Filter</button> &nbsp;&nbsp;
+      <button class="btn btn-primary hsil-red" (click)="exportData()">Export</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 10px" *ngIf="otherRole == 'Other' ">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+      <button class="btn btn-primary hsil-red" (click)="applyFilter()">Apply Filter</button> &nbsp;&nbsp;
+      <button class="btn btn-primary hsil-red" (click)="exportData()">Export</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-12" style="overflow: auto">
+      <ng2-smart-table [settings]="settings" [source]="applyFilterData" (delete)="view($event)"></ng2-smart-table>
+      <!-- <ng2-smart-table [settings]="settings" [source]="applyFilterData" (delete)="view($event)"></ng2-smart-table> -->
+    </div>
+  </div>
+</div>
+
+<div id="viewDetailsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="max-width:  1320px !important">
+        <div class="modal-content">
+            <div class="modal-header">
+              <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+              <h4 class="modal-title">View</h4>
+            </div>
+            <div class="modal-body" style="height: 430px;overflow: auto;">
+              <div class="row">
+                <div class="col-md-12">
+                  <table class="table table-bordered">
+                    <tr><th>Training Name</th> <th>Start Date</th> <th>End Date</th> 
+                      <th>Ticket Number</th> <th>Result</th> <th>Cerificate</th> </tr>
+                      <tr *ngFor="let v of viewDetailsList">
+                        <td>{{v.trainingName}}</td>
+                        <td>{{v.startDate}}</td>
+                        <td>{{v.endDate}}</td>
+                        <td>{{v.ticketNumb}}</td>
+                        <td>{{v.result}}</td>
+                        <td><button [disabled]="v.result != 'PASS'" (click)="viewCertificate(v.trainingName,v.submitDate)">Certificate</button></td>
+                      </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="viewCertificateModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg" style="max-width:  1320px !important">
+      <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            <h4 class="modal-title">Certificate</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12" id="covertToPdf">
+                <img src="assets/img/pdf_header.jpg" alt="My Ad Cubes" style="width: 100%;height: 140px;">
+                <h3 class="text-center">This is Certify that</h3>
+                <h1 class="text-center">Mr. {{viewedEmpName}}</h1>
+                <h3 class="text-center">Has successfully completed</h3>
+                <h3 class="text-center">Training {{viewedTrName}} on {{viewedSbDate}}</h3>
+                <div class="row">
+                    <div class="col-md-5"><h3>Training and Development</h3></div>
+                    <div class="col-md-7"><h3 class="text-right">Team O & M</h3></div>
+                </div>
+                <img src="assets/img/pdf_footer.jpg" alt="My Ad Cubes" style="width: 100%">
+              </div>
+              
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-primary" (click) = "downloadCertificate()"> <span class="glyphicon glyphicon-download-alt"></span> Download</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>

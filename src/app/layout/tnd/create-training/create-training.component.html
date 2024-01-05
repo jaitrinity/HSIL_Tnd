@@ -1,0 +1,260 @@
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="medium" color="#fff" type="ball-circus"></ngx-spinner>
+
+<!-- <ul class="breadcrumb">
+  <li><a href="javascript:void(0)">Home</a></li>
+  <li><a href="javascript:void(0)">T&D</a></li>
+  <li><a href="javascript:void(0)">Create Training</a></li>
+</ul> -->
+
+<div class="row mr-0" style="background:#f4dad8;">
+  <div class="col-md-4">
+    <a href="javascript:void()" (click)="reloadPage()" style="font-size: 20px;margin-top: 5px;color:#db1d12">
+      <span class="fa fa-refresh"></span> {{submenuName}}
+    </a>
+  </div>
+  <div class="col-md-4 text-center">
+    <img *ngIf="organizationLogo != null && organizationLogo != '' " [src] = "organizationLogo" 
+      style="width: 70px;height: 45px;"/>
+      &nbsp; <label style="font-size: 20px;">{{organizationName}}</label>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 form-group">
+      <label>Training Name</label>
+      <input type="text" class="form-control" [(ngModel)]="trainingName" [disabled] = "trainingDisabled"/>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Sub Training Name</label>
+      <input type="text" class="form-control" [(ngModel)]="subTrainingName" [disabled] = "trainingDisabled"/>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>User Role</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="roleList" [(ngModel)]="selectedRoleList"
+        [settings]="multiSelectropdownSettings" [disabled] = "trainingDisabled">
+      </ng-multiselect-dropdown>
+      <!-- (onSelect)="onSelectRole($event)"
+      (onSelectAll)="onSelectAllRole($event)" (onDeSelect)="onDeSelectRole($event)"
+      (onDeSelectAll)="onDeSelectAllRole($event)"  -->
+    </div>
+    <div class="col-md-2 form-group">
+      <!-- <label>Circle Name</label> -->
+      <label>Organization</label>
+      <ng-multiselect-dropdown [placeholder]="'Select'" [data]="circleNameList" [(ngModel)]="selectedCircleNameList"
+        [settings]="multiSelectropdownSettings"  [disabled] = "trainingDisabled"> 
+      </ng-multiselect-dropdown>
+      <!-- (onSelect)="onSelectCircle($event)"
+        (onSelectAll)="onSelectAllCircle($event)" (onDeSelect)="onDeSelectCircle($event)"
+        (onDeSelectAll)="onDeSelectAllCircle($event)" -->
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>Language</label>
+      <select class="form-control" [(ngModel)] = "language" [disabled] = "trainingDisabled">
+        <option value="" [disabled]="true">Select</option>
+        <!-- <option value="{{l.paramCode}}" *ngFor="let l of languageList">{{l.paramDesc}}</option> -->
+        <option value="{{l.id}}" *ngFor="let l of languageList">{{l.language}}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 form-group">
+      <label>Choose Media type </label> <br>
+      <!-- [disabled] = "trainingTypeDisabled" -->
+      <select class="form-control" [(ngModel)] = "mediaType" (change)="selectMediaType()" >
+        <option value="" [disabled]="true">Select</option>
+        <option value="{{l.typeId}}" *ngFor="let l of mediaTypeList">{{l.modiaType}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2 form-group">
+      <label>Choose training type</label> <br>
+      <label><input type="checkbox" (click)="checkedTrainingType()" [(ngModel)]="isPre" [disabled] = "trainingTypeDisabled"/> Pre </label> &nbsp;&nbsp;
+      <!-- <label><input type="checkbox" (click)="checkedTrainingType()" [(ngModel)]="isVideo" [disabled] = "trainingTypeDisabled"/> Video </label> &nbsp;&nbsp; -->
+      <label><input type="checkbox" (click)="checkedTrainingType()" [(ngModel)]="isPost" [disabled] = "trainingTypeDisabled"/> Post </label>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Min Pre Question</label>
+      <input type="number" class="form-control" [(ngModel)]="minPreQuestion" [disabled] = "!isPre || trainingDisabled" />
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Min Post Question</label>
+      <input type="number" class="form-control" [(ngModel)]="minPostQuestion" [disabled] = "!isPost || trainingDisabled"/>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Pre Pass Percentage</label>
+      <input type="number" class="form-control" [(ngModel)]="prePassPercentage" [disabled] = "!isPre || trainingDisabled"/>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Post Pass Percentage</label>
+      <input type="number" class="form-control" [(ngModel)]="postPassPercentage" [disabled] = "!isPost || trainingDisabled"/>
+    </div>
+    <div class="col-md-2 form-group">
+      <label>Question Type</label>
+      <select class="form-control" [(ngModel)] = "questionType" (change)="selectQuestionType()" [disabled] = "questionTypeDisabled">
+        <option value="" [disabled]="true">Select</option>
+        <option value="{{qt.id}}" *ngFor="let qt of questionTypeList;let i = index">{{qt.desc}}</option>
+      </select>
+    </div>
+    
+  </div>
+
+  <div *ngIf="preTrainingViewDiv">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <label>Pre Question : {{preAddedQuestionList.length+1}}</label>
+      </div>
+    </div>
+    <div class="row" >
+      <div class="col-md-12 form-group">
+        <label>Question</label>
+        <textarea placeholder="enter question" [disabled]="questionType == '' " rows="5" [(ngModel)]="question" class="form-control"></textarea>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 5px">
+      <div class="col-md-12 text-center">
+        <label *ngFor="let ol of noOfOptionList" style="margin-right: 10px"><input type="radio" name="oo" value="ol.id" (click)="selectOptionSize(ol.id)"/>{{ol.id}}</label>
+      </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <label class="input-group-addon"><input type="checkbox" id="optionAnswer_1" /></label>
+          <input type="text" *ngIf="optionType!='Image'" class="form-control optionValue" placeholder="option 1" id="option_1"/>
+          <input type="file" *ngIf="os.type=='Image'" class="form-control optionImage" placeholder="option 1" id="option_1" accept=".jpg,.jpeg"
+          (change)="changeListener($event,1)"/>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="row">
+      <div class="col-md-6" *ngFor="let os of optionShowList;let i = index" style="margin-top: 5px">
+          <div class="input-group">
+            <label class="input-group-addon" *ngIf="questionType=='4'"><input type="checkbox" id="optionAnswer_{{i+1}}" /></label>
+            <label class="input-group-addon" *ngIf="questionType!='4'"><input type="radio" id="optionAnswer_{{i+1}}" /></label>
+            <input type="text" *ngIf="questionType!='6'" class="form-control optionValue" placeholder="option {{os.id}}" id="option_{{i+1}}"/>
+            <input type="file" *ngIf="questionType=='6'" class="form-control optionImage" placeholder="option {{os.id}}" id="option_{{i+1}}" accept=".jpg,.jpeg"
+            (change)="changeListener($event,i+1)"/>
+          </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="questionType != '' " style="margin-top: 10px">
+      <div class="col-md-12 text-right">
+        <button class="btn btn-primary hsil-red" (click)="addPreSameType()"  style="margin-right: 10px">Add Same Type Question</button>
+        <button class="btn btn-primary hsil-red" (click)="changeQuestionType()"  style="margin-right: 10px">Change Question Type</button>
+        <button class="btn btn-primary hsil-red" (click)="submitPreTraining()">Submit</button>
+      </div>
+      <!-- <div class="col-md-3"></div>
+      <div class="col-md-3">
+        <button class="btn-primary" (click)="addPreSameType()">Add Same Type Question</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn-primary"  (click)="changeQuestionType()">Change Question Type</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn-primary">Preview</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn-primary" (click)="submitPreTraining()">Submit</button>
+      </div> -->
+    </div>
+  </div>
+
+  <div *ngIf="videoTrainingViewDiv">
+    <div class="row">
+      <div class="col-md-12 text-center">
+          <label *ngFor="let tv of trainingVideoList" style="margin-right: 10px"><input type="radio" name="tv" (click)="selectNoOfTrainingVideo(tv.id)"/>{{tv.id}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-center" *ngFor="let tvs of trainingVideoSize; let i = index">
+          <!-- (click)="clickOnUploadDiv(i+1)" -->
+        <div style="border:1px solid #003977;padding: 10px;cursor: pointer;">
+          <label *ngIf="mediaType == '1' || mediaType == '2' || mediaType == '4' || mediaType == '5' || mediaType == '6' ">
+            <span class="fa fa-upload" style="font-size: 100px"></span>
+          </label> 
+          <label *ngIf="mediaType == '3' || mediaType == '7' ">
+            <span class="fa fa-edit" style="font-size: 100px"></span>
+          </label> 
+          <input *ngIf="mediaType == '1' " type="file" class="form-control" accept="video/*" id="video_{{i+1}}" (change)="changeVideoListener($event,i+1)"/>
+          <input *ngIf="mediaType == '2' " type="file" class="form-control" accept=".ppt,.pptx" id="video_{{i+1}}" (change)="changeVideoListener($event,i+1)"/>
+          <input *ngIf="mediaType == '4' " type="file" class="form-control" accept=".pdf" id="video_{{i+1}}" (change)="changeVideoListener($event,i+1)"/>
+          <input *ngIf="mediaType == '5' " type="file" class="form-control" accept=".doc,.docx" id="video_{{i+1}}" (change)="changeVideoListener($event,i+1)"/>
+          <input *ngIf="mediaType == '6' " type="file" class="form-control" accept="image/gif" id="video_{{i+1}}" (change)="changeVideoListener($event,i+1)"/>
+          <input *ngIf="mediaType == '3' || mediaType == '7' " type="text" class="form-control" id="video_{{i+1}}" placeholder="enter url {{i+1}}"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="trainingVideoSize.length !=0 ">
+      <div class="col-md-12 text-right">
+        <button class="btn btn-primary hsil-red" (click)="submitVideo()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="postTrainingViewDiv">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <label>Post Question : {{postAddedQuestionList.length+1}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 form-group">
+        <label>Question</label>
+        <textarea placeholder="enter question" [disabled]="questionType == '' " rows="5" [(ngModel)]="question"
+          class="form-control"></textarea>
+      </div>
+    </div>
+  
+    <div class="row" style="margin-top: 5px">
+      <div class="col-md-12 text-center">
+        <label *ngFor="let ol of noOfOptionList" style="margin-right: 10px"><input type="radio" name="oo" value="ol.id"
+            (click)="selectOptionSize(ol.id)" />{{ol.id}}</label>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-6" *ngFor="let os of optionShowList;let i = index" style="margin-top: 5px">
+        <div class="input-group">
+          <!-- <label class="input-group-addon"><input type="checkbox" id="optionAnswer_{{i+1}}" /></label> -->
+          <label class="input-group-addon" *ngIf="questionType=='4'"><input type="checkbox" id="optionAnswer_{{i+1}}" /></label>
+          <label class="input-group-addon" *ngIf="questionType!='4'"><input type="radio" id="optionAnswer_{{i+1}}" /></label>
+          <input type="text" *ngIf="os.type!='Image'" class="form-control optionValue" placeholder="option {{os.id}}"
+            id="option_{{i+1}}" />
+          <input type="file" *ngIf="os.type=='Image'" class="form-control optionImage" placeholder="option {{os.id}}"
+            id="option_{{i+1}}" accept=".jpg,.jpeg" />
+        </div>
+      </div>
+    </div>
+  
+    <div class="row" *ngIf="questionType != '' " style="margin-top: 10px">
+      <div class="col-md-12 text-right">
+        <button class="btn btn-primary hsil-red" (click)="addPostSameType()"  style="margin-right: 10px">Add Same Type Question</button>
+        <button class="btn btn-primary hsil-red" (click)="changeQuestionType()"  style="margin-right: 10px">Change Question Type</button>
+        <button class="btn btn-primary hsil-red" (click)="submitPostTraining()">Submit</button>
+      </div>
+      <!-- <div class="col-md-3"></div>
+      <div class="col-md-3">
+        <button class="btn btn-primary hsil-red" (click)="addPostSameType()">Add Same Type Question</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary hsil-red" (click)="changeQuestionType()">Change Question Type</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn-primary">Preview</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary hsil-red" (click)="submitPostTraining()">Submit</button>
+      </div> -->
+    </div>
+  </div>
+
+</div>
